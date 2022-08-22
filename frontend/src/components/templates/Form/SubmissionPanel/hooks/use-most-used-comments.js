@@ -1,8 +1,9 @@
-import { useState, useEffect } from 'react';
-import { getMostUsedComments } from '../../../../../services/enrollments';
+import { useEffect, useState } from 'react';
+import { useEnrollment } from '../../../../../services/enrollments';
 
 const useMostUsedComments = (event, targetApi) => {
   const [comments, setComments] = useState([]);
+  const { getMostUsedComments } = useEnrollment();
 
   useEffect(() => {
     async function fetchMostUsedComments() {

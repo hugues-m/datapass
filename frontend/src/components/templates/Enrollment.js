@@ -1,15 +1,16 @@
 import React, { useState, useEffect } from 'react';
-import { getUserEnrollment } from '../../services/enrollments';
 import { Navigate, useParams } from 'react-router-dom';
 import Loader from '../atoms/Loader';
 import Alert from '../atoms/Alert';
 import NotFound from '../organisms/NotFound';
+import { useEnrollment } from '../../services/enrollments';
 
 const Enrollment = () => {
   const { enrollmentId } = useParams();
   const [fetchEnrollmentError, setFetchEnrollmentError] = useState(false);
   const [fetchEnrollmentNotFound, setFetchEnrollmentNotFound] = useState(false);
   const [targetApi, setTargetApi] = useState(null);
+  const { getUserEnrollment } = useEnrollment();
 
   const fetchEnrollment = async ({ enrollmentId }) => {
     try {

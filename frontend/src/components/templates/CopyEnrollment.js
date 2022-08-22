@@ -1,14 +1,15 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 
-import { copyEnrollment } from '../../services/enrollments';
 import { Navigate, useParams } from 'react-router-dom';
 import { getErrorMessages } from '../../lib';
 import Loader from '../atoms/Loader';
 import { Linkify } from '../molecules/Linkify';
 import Alert from '../atoms/Alert';
+import { useEnrollment } from '../../services/enrollments';
 
 const CopyEnrollment = () => {
   const { enrollmentId } = useParams();
+  const { copyEnrollment } = useEnrollment();
 
   const [copyErrorMessage, setCopyErrorMessage] = useState(null);
   const [copiedEnrollmentId, setCopiedEnrollmentId] = useState(null);

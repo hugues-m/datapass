@@ -1,7 +1,7 @@
 import React, { useEffect, useMemo, useState } from 'react';
 
 import { DATA_PROVIDER_PARAMETERS } from '../../../../config/data-provider-parameters';
-import { getUsers } from '../../../../services/users';
+import { useUsers } from '../../../../services/users';
 import Table from './Table';
 import RoleCheckboxCell from './RoleCheckboxCell';
 import { TextFilter, textFilter } from './TextFilter';
@@ -17,6 +17,7 @@ const UserList = () => {
   const [users, setUsers] = useState([]);
   const [showAllUsers, setShowAllUsers] = useState(false);
   const [skipReset, setSkipReset] = React.useState(false);
+  const { getUsers } = useUsers();
 
   const filterTypes = React.useMemo(
     () => ({

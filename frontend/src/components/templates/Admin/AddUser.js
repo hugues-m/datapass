@@ -1,16 +1,17 @@
 import React, { useState } from 'react';
-import { createUser } from '../../../services/users';
 import TextInput from '../../atoms/inputs/TextInput';
 import AutorenewIcon from '../../atoms/icons/autorenew';
 import { getErrorMessages } from '../../../lib';
 import Button from '../../atoms/hyperTexts/Button';
 import Alert from '../../atoms/Alert';
 import ListHeader from '../../molecules/ListHeader';
+import { useUsers } from '../../../services/users';
 
 export const AddUser = () => {
   const [newUserEmail, setNewUserEmail] = useState('');
   const [success, setSuccess] = useState(false);
   const [error, setError] = useState(null);
+  const { createUser } = useUsers();
 
   const handleChange = (event) => {
     setNewUserEmail(event.target.value);

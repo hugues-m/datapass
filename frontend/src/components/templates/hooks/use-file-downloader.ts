@@ -1,11 +1,10 @@
-import httpClient from '../../../lib/http-client';
 import fileDownload from 'js-file-download';
 import { useState } from 'react';
-
-const { REACT_APP_BACK_HOST: BACK_HOST } = process.env;
+import { useBackendClient } from '../../organisms/hooks/useBackendClient';
 
 export const useFileDownloader = () => {
   const [isDownloading, setIsDownloading] = useState(false);
+  const httpClient = useBackendClient();
 
   const download = (fileUrl: string = '', acceptHeader?: string) => {
     setIsDownloading(true);
@@ -16,7 +15,7 @@ export const useFileDownloader = () => {
     }
 
     httpClient
-      .get(`${BACK_HOST}${fileUrl}`, {
+      .get(fileUrl, {
         responseType: 'blob',
         headers,
       })

@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { updateUser } from '../../../../services/users';
+import { useUsers } from '../../../../services/users';
 
 const RoleCheckboxCell = ({
   value: initialValue,
@@ -8,6 +8,7 @@ const RoleCheckboxCell = ({
   updateData,
 }) => {
   const [value, setValue] = useState(initialValue);
+  const { updateUser } = useUsers();
 
   const onChange = async (e) => {
     const newValue = e.target.checked;

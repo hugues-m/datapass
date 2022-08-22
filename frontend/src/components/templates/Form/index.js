@@ -9,7 +9,6 @@ import React, {
 import { useNavigate, useParams } from 'react-router-dom';
 import { DATA_PROVIDER_PARAMETERS } from '../../../config/data-provider-parameters';
 import { getStateFromUrlParams } from '../../../lib';
-import { getUserEnrollment } from '../../../services/enrollments';
 import Alert from '../../atoms/Alert';
 import WarningEmoji from '../../atoms/icons/WarningEmoji';
 import { Linkify } from '../../molecules/Linkify';
@@ -22,6 +21,7 @@ import { enrollmentReducerFactory } from './enrollmentReducer';
 import HideSectionsContainer from './HideSectionsContainer';
 import './style.css';
 import SubmissionPanel from './SubmissionPanel';
+import { useEnrollment } from '../../../services/enrollments';
 
 export const FormContext = React.createContext();
 
@@ -39,6 +39,7 @@ export const Form = ({
   const [hasNotFoundError, setHasNotFoundError] = useState(false);
   const navigate = useNavigate();
   const { goBackToList } = useListItemNavigation();
+  const { getUserEnrollment } = useEnrollment();
 
   const sectionLabels = useMemo(() => {
     return React.Children.map(

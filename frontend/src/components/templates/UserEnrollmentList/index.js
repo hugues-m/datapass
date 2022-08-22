@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { groupBy, isEmpty } from 'lodash';
-import { getUserEnrollments } from '../../../services/enrollments';
+import { useEnrollment } from '../../../services/enrollments';
 import Loader from '../../atoms/Loader';
 import Enrollment from './Enrollment';
 import Alert from '../../atoms/Alert';
@@ -11,6 +11,7 @@ import { NewEnrollmentButton } from '../../molecules/NewEnrollmentButton';
 const UserEnrollmentList = () => {
   const [isLoading, setIsLoading] = useState(true);
   const [enrollmentsByOrganization, setEnrollmentsByOrganization] = useState();
+  const { getUserEnrollments } = useEnrollment();
 
   const { goToItem } = useListItemNavigation();
 
@@ -26,7 +27,7 @@ const UserEnrollmentList = () => {
     };
 
     onFetchData();
-  }, []);
+  }, [getUserEnrollments]);
 
   return (
     <main className="list-page">

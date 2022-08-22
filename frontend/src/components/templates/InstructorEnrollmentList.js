@@ -7,7 +7,7 @@ import moment from 'moment';
 import './InstructorEnrollmentList.css';
 
 import { getStateFromUrlParams, setUrlParamsFromState } from '../../lib';
-import { getEnrollments } from '../../services/enrollments';
+import { withEnrollment } from '../../services/enrollments';
 import { DATA_PROVIDER_PARAMETERS } from '../../config/data-provider-parameters';
 import { INSTRUCTOR_STATUS_LABELS } from '../../config/status-parameters';
 import enrollmentListStyle from './enrollmentListStyle';
@@ -340,7 +340,7 @@ class InstructorEnrollmentList extends React.Component {
     const {
       enrollments,
       meta: { total_pages: totalPages },
-    } = await getEnrollments({
+    } = await this.props.enrollment.getEnrollments({
       page,
       sortBy: sorted,
       filter: filtered,
@@ -501,6 +501,10 @@ const withAuth = (Component) => {
   );
 };
 
-export default withMatomoTrackEvent(
-  withFileDownloader(withListItemNavigation(withAuth(InstructorEnrollmentList)))
+export default withEnrollment(
+  withMatomoTrackEvent(
+    withFileDownloader(
+      withListItemNavigation(withAuth(InstructorEnrollmentList))
+    )
+  )
 );

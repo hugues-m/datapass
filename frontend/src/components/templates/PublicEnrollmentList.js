@@ -7,7 +7,6 @@ import {
   DATA_PROVIDER_PARAMETERS,
   HIDDEN_DATA_PROVIDER_KEYS,
 } from '../../config/data-provider-parameters';
-import { getPublicValidatedEnrollments } from '../../services/enrollments';
 import enrollmentListStyle from './enrollmentListStyle';
 
 import { debounce } from 'lodash';
@@ -15,6 +14,7 @@ import Tag from '../atoms/hyperTexts/Tag';
 import ScheduleIcon from '../atoms/icons/schedule';
 import TagContainer from '../atoms/TagContainer';
 import ListHeader from '../molecules/ListHeader';
+import { withEnrollment } from '../../services/enrollments';
 
 class PublicEnrollmentList extends React.Component {
   constructor(props) {
@@ -48,7 +48,7 @@ class PublicEnrollmentList extends React.Component {
     const {
       enrollments,
       meta: { total_pages: totalPages },
-    } = await getPublicValidatedEnrollments({
+    } = await this.props.enrollment.getPublicValidatedEnrollments({
       targetApi: this.props.params.targetApi,
       page,
     });
@@ -226,4 +226,4 @@ const withParams = (Component) => {
   };
 };
 
-export default withParams(PublicEnrollmentList);
+export default withEnrollment(withParams(PublicEnrollmentList));

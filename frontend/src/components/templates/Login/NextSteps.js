@@ -4,10 +4,12 @@ import AuthIcon from '../../atoms/icons/auth';
 import DemandeIcon from '../../atoms/icons/demande';
 import HabilitationIcon from '../../atoms/icons/habilitation';
 import TokenIcon from '../../atoms/icons/token';
-import { getCachedMajorityPercentileProcessingTimeInDays } from '../../../services/stats';
+import { useStats } from '../../../services/stats';
 
 const NextSteps = ({ targetApi, isService = false }) => {
   const [stat, setStat] = useState(null);
+
+  const { getCachedMajorityPercentileProcessingTimeInDays } = useStats();
 
   useEffect(() => {
     async function fetchData() {
