@@ -2,7 +2,6 @@ import React, { useContext, useEffect, useState } from 'react';
 import { DATA_PROVIDER_PARAMETERS } from '../../../../config/data-provider-parameters';
 import useAccessToEnrollment from './useAccessToEnrollment';
 import { FormContext } from '../../../templates/Form';
-import { getUserValidatedEnrollments } from '../../../../services/enrollments';
 import { Link as ReactRouterLink } from 'react-router-dom';
 import Stepper from '../../../molecules/Stepper';
 import SelectInput from '../../../atoms/inputs/SelectInput';
@@ -11,6 +10,7 @@ import { isEmpty } from 'lodash';
 import { ScrollablePanel } from '../../Scrollable';
 import Alert from '../../../atoms/Alert';
 import Link from '../../../atoms/hyperTexts/Link';
+import { useEnrollment } from '../../../../services/enrollments';
 
 const SECTION_LABEL = 'Habilitation associée';
 const SECTION_ID = encodeURIComponent(SECTION_LABEL);
@@ -22,6 +22,8 @@ const PreviousEnrollmentSection = ({ steps }) => {
     onChange,
     enrollment: { previous_enrollment_id = '', target_api },
   } = useContext(FormContext);
+
+  const { getUserValidatedEnrollments } = useEnrollment();
 
   // disable fetch if not disabled or is loading
   const hasAccessToPreviousEnrollment = useAccessToEnrollment(
@@ -60,7 +62,12 @@ const PreviousEnrollmentSection = ({ steps }) => {
     if (!disabled && !isUserEnrollmentLoading && previousTargetApi) {
       fetchUserValidatedEnrollments();
     }
-  }, [isUserEnrollmentLoading, disabled, previousTargetApi]);
+  }, [
+    isUserEnrollmentLoading,
+    disabled,
+    previousTargetApi,
+    getUserValidatedEnrollments,
+  ]);
 
   useEffect(() => {
     if (!isEmpty(validatedEnrollments) && !previous_enrollment_id) {
@@ -86,7 +93,7 @@ const PreviousEnrollmentSection = ({ steps }) => {
         <>
           <p>
             La procédure consiste en {steps.length} demandes d’habilitation
-            distinctes :
+            distinctes :
           </p>
           <Stepper
             steps={steps}

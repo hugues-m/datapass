@@ -1,37 +1,37 @@
 import { hashToQueryParams } from '../lib';
-import httpClient from '../lib/http-client';
+import { useBackendClient } from '../components/organisms/hooks/useBackendClient';
 
-const { REACT_APP_BACK_HOST: BACK_HOST } = process.env;
+export const useUsers = () => {
+  const client = useBackendClient();
 
-export function getUsers({ usersWithRolesOnly = true }) {
-  const queryParam = hashToQueryParams({
-    users_with_roles_only: usersWithRolesOnly,
-  });
-  return httpClient
-    .get(`${BACK_HOST}/api/users${queryParam}`)
-    .then(({ data }) => data);
-}
+  return {
+    getUsers({ usersWithRolesOnly = true }) {
+      const queryParam = hashToQueryParams({
+        users_with_roles_only: usersWithRolesOnly,
+      });
+      return client.get(`/api/users${queryParam}`).then(({ data }) => data);
+    },
+    updateUser({ id, roles = [] }) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
 
-export function updateUser({ id, roles = [] }) {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
+      return client
+        .patch(`/api/users/${id}`, { user: { roles } }, config)
+        .then(({ data }) => data);
+    },
+    createUser({ email }) {
+      const config = {
+        headers: {
+          'Content-Type': 'application/json',
+        },
+      };
+
+      return client
+        .post(`/api/users`, { user: { email } }, config)
+        .then(({ data }) => data);
     },
   };
-
-  return httpClient
-    .patch(`${BACK_HOST}/api/users/${id}`, { user: { roles } }, config)
-    .then(({ data }) => data);
-}
-
-export function createUser({ email }) {
-  const config = {
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  };
-
-  return httpClient
-    .post(`${BACK_HOST}/api/users`, { user: { email } }, config)
-    .then(({ data }) => data);
-}
+};

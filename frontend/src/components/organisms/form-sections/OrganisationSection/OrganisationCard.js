@@ -1,7 +1,7 @@
 import { isEmpty } from 'lodash';
 import { useCallback, useContext, useEffect, useState } from 'react';
 import { isValidNAFCode } from '../../../../lib';
-import { getCachedOrganizationInformation } from '../../../../services/external';
+import { useExternal } from '../../../../services/external';
 import Alert from '../../../atoms/Alert';
 import Button from '../../../atoms/hyperTexts/Button';
 import Loader from '../../../atoms/Loader';
@@ -25,6 +25,8 @@ export const OrganisationCard = () => {
       target_api,
     },
   } = useContext(FormContext);
+
+  const { getCachedOrganizationInformation } = useExternal();
 
   const [title, setTitle] = useState('');
   const [adresse, setAdresse] = useState('');

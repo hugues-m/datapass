@@ -26,7 +26,7 @@ import {
   USER_STATUS_LABELS,
 } from '../../config/status-parameters';
 import { stackLowUseAndUnpublishedApi } from '../../lib';
-import { getAPIStats } from '../../services/stats';
+import { useStats } from '../../services/stats';
 import Helper from '../atoms/Helper';
 import Link from '../atoms/hyperTexts/Link';
 import Tag from '../atoms/hyperTexts/Tag';
@@ -72,6 +72,8 @@ const USER_STATUS_COLORS = {
 };
 
 export const Stats = () => {
+  const { getAPIStats } = useStats();
+
   const [stats, setStats] = useState(null);
   const { targetApi } = useParams();
 
@@ -126,7 +128,7 @@ export const Stats = () => {
     }
 
     fetchStats();
-  }, [targetApi, dataProviderKeyList]);
+  }, [getAPIStats, targetApi, dataProviderKeyList]);
 
   if (!stats) {
     return (

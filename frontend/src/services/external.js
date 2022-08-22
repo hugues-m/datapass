@@ -1,12 +1,10 @@
 import { RateLimiter } from 'limiter';
 import { memoize } from 'lodash';
-import httpClient from '../lib/http-client';
-
-const { REACT_APP_BACK_HOST: BACK_HOST } = process.env;
+import { useBackendClient } from '../components/organisms/hooks/useBackendClient';
 
 const limiter = new RateLimiter({ tokensPerInterval: 2, interval: 300 });
 
-const getOrganizationInformation = async (siret) => {
+const getOrganizationInformation = async (siret, client) => {
   await limiter.removeTokens(1);
 
   const {
@@ -19,8 +17,8 @@ const getOrganizationInformation = async (siret) => {
       activite_principale_label,
       etat_administratif,
     },
-  } = await httpClient
-    .get(`${BACK_HOST}/api/insee/etablissements/${siret}`, {
+  } = await client
+    .get(`/api/insee/etablissements/${siret}`, {
       headers: { 'Content-type': 'application/json' },
     })
     .then(({ data }) => data);
@@ -39,11 +37,17 @@ const getOrganizationInformation = async (siret) => {
 
 const memoizedGetOrganizationInformation = memoize(getOrganizationInformation);
 
-export const getCachedOrganizationInformation = async (siret) => {
-  try {
-    return await memoizedGetOrganizationInformation(siret);
-  } catch (e) {
-    memoizedGetOrganizationInformation.cache.delete(siret);
-    throw e;
-  }
+export const useExternal = () => {
+  const client = useBackendClient();
+  const getCachedOrganizationInformation = async (siret) => {
+    try {
+      return await memoizedGetOrganizationInformation(siret, client);
+    } catch (e) {
+      memoizedGetOrganizationInformation.cache.delete(siret);
+      throw e;
+    }
+  };
+  return {
+    getCachedOrganizationInformation,
+  };
 };

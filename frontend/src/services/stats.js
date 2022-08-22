@@ -1,33 +1,41 @@
 import { memoize } from 'lodash';
 import { hashToQueryParams } from '../lib';
-import httpClient from '../lib/http-client';
+import { useBackendClient } from '../components/organisms/hooks/useBackendClient';
 
-const { REACT_APP_BACK_HOST: BACK_HOST } = process.env;
+export const useStats = () => {
+  const client = useBackendClient();
 
-export async function getAPIStats(target_api_list) {
-  return httpClient.get(
-    `${BACK_HOST}/api/stats${hashToQueryParams({
-      target_api_list,
-    })}`,
-    {
-      headers: { 'Content-type': 'application/json' },
-    }
-  );
-}
-
-export async function getMajorityPercentileProcessingTimeInDays(target_api) {
-  return httpClient.get(
-    `${BACK_HOST}/api/stats/majority_percentile_processing_time_in_days${hashToQueryParams(
+  const getAPIStats = async (target_api_list) => {
+    return client.get(
+      `/api/stats${hashToQueryParams({
+        target_api_list,
+      })}`,
       {
-        target_api,
+        headers: { 'Content-type': 'application/json' },
       }
-    )}`,
-    {
-      headers: { 'Content-type': 'application/json' },
-    }
-  );
-}
+    );
+  };
 
-export const getCachedMajorityPercentileProcessingTimeInDays = memoize(
-  getMajorityPercentileProcessingTimeInDays
-);
+  const getMajorityPercentileProcessingTimeInDays = async (target_api) => {
+    return client.get(
+      `/api/stats/majority_percentile_processing_time_in_days${hashToQueryParams(
+        {
+          target_api,
+        }
+      )}`,
+      {
+        headers: { 'Content-type': 'application/json' },
+      }
+    );
+  };
+
+  const getCachedMajorityPercentileProcessingTimeInDays = memoize(
+    getMajorityPercentileProcessingTimeInDays
+  );
+
+  return {
+    getAPIStats,
+    getMajorityPercentileProcessingTimeInDays,
+    getCachedMajorityPercentileProcessingTimeInDays,
+  };
+};

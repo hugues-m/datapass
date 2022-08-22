@@ -5,7 +5,7 @@ import TextInput from '../../../atoms/inputs/TextInput';
 import TextAreaInput from '../../../atoms/inputs/TextAreaInput';
 import OrWrapper from '../../../atoms/inputs/OrWrapper';
 import FileInput from '../../../molecules/FileInput';
-import { getCachedOrganizationInformation } from '../../../../services/external';
+import { useExternal } from '../../../../services/external';
 import WarningEmoji from '../../../atoms/icons/WarningEmoji';
 import ExpandableQuote from '../../../molecules/ExpandableQuote';
 import SelectInput from '../../../atoms/inputs/SelectInput';
@@ -17,6 +17,8 @@ const SECTION_LABEL = 'La structure';
 const SECTION_ID = encodeURIComponent(SECTION_LABEL);
 
 export const StructureSection = () => {
+  const { getCachedOrganizationInformation } = useExternal();
+
   const {
     disabled,
     onChange,
@@ -197,7 +199,7 @@ export const StructureSection = () => {
       <div style={{ marginBottom: '1.5rem' }}>
         Si vous travaillez avec une administration ou un établissement publics
         (prestation, délégation de service public, subvention publique, etc.),
-        merci de renseigner l’un des champs suivants :
+        merci de renseigner l’un des champs suivants :
       </div>
       <OrWrapper>
         <TextInput
@@ -218,7 +220,7 @@ export const StructureSection = () => {
       </OrWrapper>
       <h3>Autres caractéristiques de la structure</h3>
       <div style={{ marginBottom: '1.5rem' }}>
-        Quels labels ou missions sont liés à votre structure ?
+        Quels labels ou missions sont liés à votre structure ?
       </div>
       <CheckboxInput
         label="Label France Services"

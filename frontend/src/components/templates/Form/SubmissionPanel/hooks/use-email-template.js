@@ -1,8 +1,10 @@
 import { useEffect, useState } from 'react';
-import { getEmailTemplates } from '../../../../../services/enrollments';
+import { useEnrollment } from '../../../../../services/enrollments';
 
 const useEmailTemplate = (enrollmentId, event) => {
   const [emailTemplate, setEmailTemplate] = useState([]);
+  const { getEmailTemplates } = useEnrollment();
+
   useEffect(() => {
     async function fetchEmailTemplate() {
       if (!event || !enrollmentId) return null;
@@ -14,7 +16,7 @@ const useEmailTemplate = (enrollmentId, event) => {
     }
 
     fetchEmailTemplate();
-  }, [event, enrollmentId]);
+  }, [event, enrollmentId, getEmailTemplates]);
 
   return emailTemplate;
 };

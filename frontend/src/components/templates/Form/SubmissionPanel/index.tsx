@@ -1,6 +1,6 @@
 import { FunctionComponent } from 'react';
 import { eventConfigurations } from '../../../../config/event-configuration';
-import { processEvent } from '../../../../lib/process-event';
+import { useProcessEvent } from '../../../../lib/process-event';
 import Loader from '../../../atoms/Loader';
 import EventButtonList from '../../../molecules/EventButtonList';
 import ConfirmationModal from '../../../organisms/ConfirmationModal';
@@ -18,6 +18,8 @@ const SubmissionPanel: FunctionComponent<Props> = ({
   handlePostEvent,
   updateEnrollment,
 }) => {
+  const processEvent = useProcessEvent();
+
   const {
     pendingEvent,
     loading,
@@ -58,7 +60,7 @@ const SubmissionPanel: FunctionComponent<Props> = ({
           handleCancel={onPromptCancellation}
           handleConfirm={onPromptConfirmation}
         >
-          Voulez vous continuer ?
+          Voulez vous continuer ?
         </ConfirmationModal>
       )}
     </>

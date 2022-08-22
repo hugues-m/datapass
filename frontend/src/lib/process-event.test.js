@@ -1,18 +1,30 @@
+jest.mock('../services/enrollments');
+
 import {
   EnrollmentEvent,
   eventConfigurations,
 } from '../config/event-configuration';
-jest.mock('../services/enrollments');
 // eslint-disable-next-line import/first
-import { processEvent } from './process-event';
+import { useEnrollment } from '../services/enrollments';
 // eslint-disable-next-line import/first
-import {
-  changeEnrollmentState,
-  deleteEnrollment,
-  createOrUpdateEnrollment,
-} from '../services/enrollments';
+import { useProcessEvent } from './process-event';
+// eslint-disable-next-line import/first
+import { renderHook } from '@testing-library/react-hooks';
 
 describe('When submitting the enrollment form', () => {
+  const mockUseEnrollment = () => {
+    const mockedFunctions = {
+      createOrUpdateEnrollment: jest.fn(),
+      changeEnrollmentState: jest.fn(),
+      deleteEnrollment: jest.fn(),
+    };
+    useEnrollment.mockReturnValue(mockedFunctions);
+
+    return mockedFunctions;
+  };
+
+  const testUseProcessEvent = () => renderHook(useProcessEvent).result.current;
+
   const enrollment = { id: Symbol(), acl: {} };
   const updateEnrollment = jest.fn();
 
@@ -27,7 +39,9 @@ describe('When submitting the enrollment form', () => {
     it('calls for the enrollment state update', async () => {
       const userMessage = 'La barbe de la femme à Georges Moustaki';
 
-      const output = await processEvent(
+      const { changeEnrollmentState } = mockUseEnrollment();
+
+      const output = await testUseProcessEvent()(
         event,
         eventConfiguration,
         enrollment,
@@ -50,7 +64,9 @@ describe('When submitting the enrollment form', () => {
     const eventConfiguration = eventConfigurations.destroy;
 
     it('calls the delete endpoint', async () => {
-      const output = await processEvent(
+      const { deleteEnrollment } = mockUseEnrollment();
+
+      const output = await testUseProcessEvent()(
         event,
         eventConfiguration,
         enrollment,
@@ -71,9 +87,11 @@ describe('When submitting the enrollment form', () => {
     const enrollmentToUpdate = { ...enrollment, acl: { update: true } };
 
     it('calls the update endpoint', async () => {
+      const { createOrUpdateEnrollment } = mockUseEnrollment();
+
       createOrUpdateEnrollment.mockResolvedValue(enrollmentToUpdate);
 
-      const output = await processEvent(
+      const output = await testUseProcessEvent()(
         event,
         eventConfiguration,
         enrollmentToUpdate,
@@ -87,9 +105,11 @@ describe('When submitting the enrollment form', () => {
     });
 
     it('displays an error if update fails', async () => {
+      const { createOrUpdateEnrollment } = mockUseEnrollment();
+
       createOrUpdateEnrollment.mockRejectedValue("Pas d'update désolé");
 
-      const output = await processEvent(
+      const output = await testUseProcessEvent()(
         event,
         eventConfiguration,
         enrollmentToUpdate,

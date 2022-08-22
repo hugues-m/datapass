@@ -1,11 +1,12 @@
 import React, { useEffect, useState } from 'react';
-import { getEnrollmentCopies } from '../../../../services/enrollments';
 import { isEmpty } from 'lodash';
 import { Linkify } from '../../../molecules/Linkify';
 import Alert from '../../../atoms/Alert';
+import { useEnrollment } from '../../../../services/enrollments';
 
 const EnrollmentHasCopiesNotification = ({ enrollmentId }) => {
   const [enrollmentCopies, setEnrollmentCopies] = useState(false);
+  const { getEnrollmentCopies } = useEnrollment();
 
   useEffect(() => {
     async function fetchEnrollmentCopies() {
@@ -13,11 +14,11 @@ const EnrollmentHasCopiesNotification = ({ enrollmentId }) => {
 
       const enrollmentsCopies = await getEnrollmentCopies(enrollmentId);
 
-      setEnrollmentCopies(enrollmentsCopies);
+      setEnrollmentCopies(getEnrollmentCopies);
     }
 
     fetchEnrollmentCopies();
-  }, [enrollmentId]);
+  }, [enrollmentId, getEnrollmentCopies]);
 
   if (isEmpty(enrollmentCopies)) return null;
 

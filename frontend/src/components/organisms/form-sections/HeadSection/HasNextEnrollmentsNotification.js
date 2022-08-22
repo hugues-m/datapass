@@ -1,10 +1,10 @@
 import React, { useEffect, useState } from 'react';
 import { isEmpty } from 'lodash';
 import { DATA_PROVIDER_PARAMETERS } from '../../../../config/data-provider-parameters';
-import { getNextEnrollments } from '../../../../services/enrollments';
 import { Linkify } from '../../../molecules/Linkify';
 import Alert from '../../../atoms/Alert';
 import IndexPointingRightEmoji from '../../../atoms/icons/IndexPointingRightEmoji';
+import { useEnrollment } from '../../../../services/enrollments';
 
 const formatNextEnrollment = (enrollment) =>
   `${
@@ -14,6 +14,7 @@ const formatNextEnrollment = (enrollment) =>
 
 const HasNextEnrollmentsNotification = ({ enrollmentId }) => {
   const [nextEnrollments, setNextEnrollments] = useState(false);
+  const { getNextEnrollments } = useEnrollment();
 
   useEffect(() => {
     async function fetchNextEnrollments() {
@@ -25,7 +26,7 @@ const HasNextEnrollmentsNotification = ({ enrollmentId }) => {
     }
 
     fetchNextEnrollments();
-  }, [enrollmentId]);
+  }, [enrollmentId, getNextEnrollments]);
 
   if (isEmpty(nextEnrollments)) {
     return null;

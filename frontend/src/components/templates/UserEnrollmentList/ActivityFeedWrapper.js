@@ -2,11 +2,13 @@ import { chain } from 'lodash';
 import PropTypes from 'prop-types';
 import React, { useEffect, useMemo, useState } from 'react';
 import { USER_STATUS_LABELS } from '../../../config/status-parameters';
-import { getCachedMajorityPercentileProcessingTimeInDays } from '../../../services/stats';
+import { useStats } from '../../../services/stats';
 import Alert from '../../atoms/Alert';
 import { EventItem } from '../../organisms/form-sections/HeadSection/ActivityFeed';
 
 const ActivityFeedWrapper = ({ events, status, target_api }) => {
+  const { getCachedMajorityPercentileProcessingTimeInDays } = useStats();
+
   const [
     majorityPercentileProcessingTimeInDays,
     setMajorityPercentileTimeInDays,
@@ -25,7 +27,7 @@ const ActivityFeedWrapper = ({ events, status, target_api }) => {
     if (status === 'submitted') {
       fetchStats();
     }
-  }, [status, target_api]);
+  }, [status, target_api, getCachedMajorityPercentileProcessingTimeInDays]);
 
   const {
     comment = '',

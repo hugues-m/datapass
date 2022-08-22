@@ -1,6 +1,6 @@
 import { useEffect, useState } from 'react';
-import { getHubeeValidatedEnrollments } from '../../../../services/enrollments';
 import { getScopesFromEnrollments } from '../../../../lib';
+import { useEnrollment } from '../../../../services/enrollments';
 
 export const useGetSubscribedDemarcheEnLigne = ({
   isUserEnrollmentLoading,
@@ -12,6 +12,8 @@ export const useGetSubscribedDemarcheEnLigne = ({
   const [subscribedDemarchesEnLigne, setSubscribedDemarchesEnLigne] = useState<
     string[]
   >([]);
+
+  const { getHubeeValidatedEnrollments } = useEnrollment();
 
   useEffect(() => {
     const fetchSubscribedDemarchesEnLigne = async () => {
